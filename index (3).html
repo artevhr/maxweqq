@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0c0c0c">
+<meta property="og:title" content="Maxweqq — Фотограф, Витебск">
+<meta property="og:description" content="Портретная, репортажная и документальная фотография. Витебск.">
+<title>Maxweqq — Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0c;
+  --bg2: #121212;
+  --white: #f0ece6;
+  --gold: #b8975a;
+  --gold2: rgba(184,151,90,0.12);
+  --dim: rgba(240,236,230,0.45);
+  --line: rgba(240,236,230,0.1);
+  --font-d: 'Playfair Display', serif;
+  --font-b: 'Manrope', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--white); font-family: var(--font-b); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 72px; padding: 0 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.5s, border-bottom 0.5s;
+}
+nav.scrolled {
+  background: rgba(12,12,12,0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-logo { font-family: var(--font-d); font-size: 20px; font-weight: 400; letter-spacing: 0.22em; text-transform: uppercase; color: var(--white); }
+.nav-logo em { font-style: normal; color: var(--gold); }
+.nav-actions { display: flex; gap: 12px; align-items: center; }
+.btn {
+  display: inline-block; padding: 9px 24px;
+  border: 1px solid rgba(240,236,230,0.25); background: transparent; color: var(--white);
+  font-family: var(--font-b); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 400;
+  transition: border-color 0.3s, background 0.3s, color 0.3s; cursor: pointer;
+}
+.btn:hover { border-color: var(--gold); background: var(--gold2); color: var(--gold); }
+.btn-gold { background: var(--gold); border-color: var(--gold); color: #0c0c0c; font-weight: 500; }
+.btn-gold:hover { background: transparent; color: var(--gold); }
+.nav-tg { display: none; align-items: center; gap: 7px; font-size: 13px; color: var(--dim); transition: color 0.2s; }
+.nav-tg:hover { color: var(--gold); }
+.nav-tg svg { width: 20px; height: 20px; fill: currentColor; }
+
+.hero {
+  height: 100vh; position: relative;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.42; pointer-events: none; }
+.hero-grain {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.055'/%3E%3C/svg%3E");
+  opacity: 0.7;
+}
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(12,12,12,0.96) 0%, rgba(12,12,12,0.5) 35%, rgba(12,12,12,0.15) 65%, rgba(12,12,12,0.45) 100%);
+}
+.hero-content { position: relative; z-index: 2; padding: 0 52px 88px; max-width: 860px; }
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
+  opacity: 0; animation: fadeUp 0.9s 0.3s forwards;
+}
+.eyebrow-line { flex-shrink: 0; width: 36px; height: 1px; background: var(--gold); }
+.eyebrow-text { font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); font-weight: 400; }
+.hero-title {
+  font-family: var(--font-d); font-size: clamp(52px, 8vw, 108px);
+  font-weight: 400; line-height: 1.0; color: var(--white);
+  opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+}
+.hero-title em { font-style: italic; color: var(--gold); }
+.hero-sub {
+  margin-top: 24px; font-size: 15px; color: var(--dim);
+  font-weight: 300; letter-spacing: 0.05em; line-height: 1.65;
+  opacity: 0; animation: fadeUp 0.9s 0.7s forwards;
+}
+.hero-actions {
+  margin-top: 44px; display: flex; gap: 14px; align-items: center;
+  opacity: 0; animation: fadeUp 0.9s 0.9s forwards;
+}
+.hero-scroll {
+  position: absolute; right: 52px; bottom: 80px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  opacity: 0; animation: fadeIn 1s 1.4s forwards;
+}
+.scroll-bar { width: 1px; height: 56px; background: var(--line); position: relative; overflow: hidden; }
+.scroll-bar::after {
+  content: ''; position: absolute; top: -100%;
+  width: 1px; height: 100%; background: var(--gold);
+  animation: scrollDown 2s 1.6s ease-in-out infinite;
+}
+.scroll-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--dim); writing-mode: vertical-rl; }
+
+.section-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.section-title { font-family: var(--font-d); font-size: clamp(34px, 4vw, 52px); font-weight: 400; line-height: 1.15; color: var(--white); }
+.section-title em { font-style: italic; color: var(--gold); }
+
+.about {
+  padding: 140px 52px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center;
+}
+.about-visual { position: relative; }
+.about-img-wrap { position: relative; overflow: hidden; aspect-ratio: 3/4; }
+.about-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.88); }
+.about-corner { position: absolute; bottom: -18px; right: -18px; width: 100px; height: 100px; border: 1px solid var(--gold); opacity: 0.35; pointer-events: none; }
+.about-tag {
+  position: absolute; top: 24px; left: -1px;
+  background: var(--gold); color: #0c0c0c;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 500; padding: 7px 14px;
+}
+.body-text { font-size: 15px; line-height: 1.88; color: var(--dim); font-weight: 300; margin-top: 24px; }
+.about-stats {
+  display: flex; gap: 0; margin-top: 52px; padding-top: 44px; border-top: 1px solid var(--line);
+}
+.stat { flex: 1; }
+.stat:not(:last-child) { padding-right: 32px; margin-right: 32px; border-right: 1px solid var(--line); }
+.stat-num { font-family: var(--font-d); font-size: 40px; font-weight: 400; color: var(--white); line-height: 1; }
+.stat-label { font-size: 12px; color: var(--dim); margin-top: 6px; font-weight: 300; }
+
+.portfolio { padding: 0 52px 120px; }
+.section-header { margin-bottom: 52px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 20px; }
+.gallery { display: flex; gap: 10px; align-items: flex-start; }
+.gallery-col { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.photo-item { position: relative; overflow: hidden; line-height: 0; }
+.photo-item img { width: 100%; height: auto; display: block; transition: transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94); filter: brightness(0.88); }
+.photo-item:hover img { transform: scale(1.05); filter: brightness(1); }
+.photo-overlay {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(12,12,12,0.55) 0%, transparent 55%);
+  opacity: 0; transition: opacity 0.4s;
+}
+.photo-item:hover .photo-overlay { opacity: 1; }
+.gallery-more-btn {
+  display: none; width: 100%; margin-top: 14px; padding: 15px;
+  border: 1px solid var(--line); background: none;
+  font-family: var(--font-b); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  cursor: pointer; color: var(--dim); transition: border-color 0.3s, color 0.3s;
+}
+.gallery-more-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.categories { padding: 0 52px 120px; }
+.cats-grid { display: grid; grid-template-columns: repeat(3,1fr); margin-top: 52px; }
+.cat-item {
+  padding: 44px 36px; border-top: 1px solid var(--line);
+  position: relative; overflow: hidden; transition: background 0.35s;
+}
+.cat-item:not(:last-child) { border-right: 1px solid var(--line); }
+.cat-item::before { content: ''; position: absolute; inset: 0; background: var(--gold2); opacity: 0; transition: opacity 0.35s; }
+.cat-item:hover::before { opacity: 1; }
+.cat-num { font-family: var(--font-d); font-size: 52px; font-weight: 400; color: rgba(240,236,230,0.06); line-height: 1; margin-bottom: 18px; position: relative; }
+.cat-name { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white); margin-bottom: 12px; transition: color 0.3s; position: relative; font-weight: 500; }
+.cat-desc { font-size: 14px; color: var(--dim); line-height: 1.75; position: relative; font-weight: 300; }
+.cat-arrow { position: absolute; bottom: 44px; right: 36px; font-size: 18px; color: var(--gold); opacity: 0; transform: translateX(-6px); transition: opacity 0.3s, transform 0.3s; }
+.cat-item:hover .cat-name { color: var(--gold); }
+.cat-item:hover .cat-arrow { opacity: 1; transform: none; }
+
+.process { padding: 100px 52px; background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; margin-top: 60px; }
+.process-step { padding: 0 36px 0 0; position: relative; }
+.process-step:not(:last-child)::after { content: ''; position: absolute; top: 24px; right: 18px; width: 1px; height: 44px; background: var(--line); }
+.step-num { font-family: var(--font-d); font-size: 44px; font-weight: 400; color: var(--gold); opacity: 0.28; line-height: 1; margin-bottom: 22px; }
+.step-title { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); margin-bottom: 12px; font-weight: 500; }
+.step-desc { font-size: 14px; color: var(--dim); line-height: 1.75; font-weight: 300; }
+.process-facts { display: flex; margin-top: 72px; padding-top: 52px; border-top: 1px solid var(--line); }
+.fact { flex: 1; }
+.fact:not(:last-child) { padding-right: 48px; margin-right: 48px; border-right: 1px solid var(--line); }
+.fact-num { font-family: var(--font-d); font-size: 52px; font-weight: 400; color: var(--white); line-height: 1; margin-bottom: 8px; }
+.fact-label { font-size: 12px; color: var(--dim); font-weight: 300; }
+
+.cta-section { padding: 160px 52px; text-align: center; position: relative; overflow: hidden; }
+.cta-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(184,151,90,0.07) 0%, transparent 68%);
+  pointer-events: none;
+}
+.cta-eyebrow { margin-bottom: 36px; display: flex; align-items: center; justify-content: center; gap: 20px; }
+.cta-eyebrow .eyebrow-line { width: 44px; }
+.cta-title { font-family: var(--font-d); font-size: clamp(42px, 6vw, 80px); font-weight: 400; color: var(--white); line-height: 1.1; margin-bottom: 52px; position: relative; }
+.cta-title em { font-style: italic; color: var(--gold); }
+.cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+footer { padding: 28px 52px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.footer-logo { font-family: var(--font-d); font-size: 15px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
+.footer-copy { font-size: 12px; color: rgba(240,236,230,0.22); }
+footer a { font-size: 12px; color: var(--dim); transition: color 0.2s; }
+footer a:hover { color: var(--gold); }
+
+.reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.85s ease, transform 0.85s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scrollDown { 0% { top: -100%; } 60% { top: 100%; } 100% { top: 100%; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow,.hero-title,.hero-sub,.hero-actions,.hero-scroll { animation: none; opacity: 1; }
+  .scroll-bar::after { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 1100px) {
+  .about { grid-template-columns: 1fr; gap: 52px; }
+  .about-visual { max-width: 420px; }
+  .cats-grid { grid-template-columns: 1fr 1fr; }
+  .cat-item:nth-child(2) { border-right: none; }
+  .cat-item:nth-child(3) { grid-column: span 2; border-right: none; }
+  .process-steps { grid-template-columns: 1fr 1fr; gap: 44px; }
+  .process-step::after { display: none; }
+  .process-step { padding: 0; }
+}
+
+@media (max-width: 768px) {
+  nav { padding: 0 24px; }
+  .nav-actions .btn { display: none; }
+  .nav-tg { display: flex; }
+
+  .hero-content { padding: 0 24px 64px; }
+  .hero-scroll { display: none; }
+
+  .about { padding: 80px 24px; }
+  .about-visual { max-width: 100%; }
+  .about-tag { left: 0; }
+  .about-corner { display: none; }
+  .about-stats { flex-direction: column; gap: 24px; }
+  .stat { border-right: none !important; padding-right: 0 !important; margin-right: 0 !important; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .stat:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .portfolio { padding: 0 24px 80px; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+  .gallery { flex-direction: column; }
+  .gallery-col { width: 100%; flex: none; }
+  .gallery-col.mobile-hidden { display: none; }
+  .gallery-col.mobile-hidden.expanded { display: flex; }
+  .gallery-more-btn { display: block; }
+
+  .categories { padding: 0 24px 80px; }
+  .cats-grid { grid-template-columns: 1fr; }
+  .cat-item { border-right: none !important; }
+  .cat-item:nth-child(3) { grid-column: span 1; }
+
+  .process { padding: 80px 24px; }
+  .process-steps { grid-template-columns: 1fr; gap: 36px; }
+  .process-facts { flex-direction: column; }
+  .fact { border-right: none !important; padding-right: 0 !important; margin-right: 0 !important; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+  .fact:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .cta-section { padding: 100px 24px; }
+  .cta-buttons { flex-direction: column; align-items: center; }
+
+  footer { padding: 24px; flex-direction: column; gap: 10px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <nav id="main-nav">
+    <a href="#" class="nav-logo">Max<em>weqq</em></a>
+    <div class="nav-actions">
+      <a href="https://t.me/maxweqq" target="_blank" rel="noopener noreferrer" class="btn">Связаться</a>
+      <a href="https://t.me/phMaxweqq" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Больше работ</a>
+      <a href="https://t.me/maxweqq" target="_blank" rel="noopener noreferrer" class="nav-tg">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.820 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        <span>@maxweqq</span>
+      </a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="hero.webm" type="video/webm">
+    </video>
+    <div class="hero-grain"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">Photography · Витебск</span>
+      </div>
+      <h1 class="hero-title">Maxweqq<br><em>Photography</em></h1>
+      <p class="hero-sub">Портретная. Репортажная. Документальная.</p>
+      <div class="hero-actions">
+        <a href="https://t.me/maxweqq" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Заказать съёмку</a>
+        <a href="https://t.me/phMaxweqq" target="_blank" rel="noopener noreferrer" class="btn">Все работы</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-bar"></div>
+      <span class="scroll-label">Scroll</span>
+    </div>
+  </section>
+
+  <section class="about reveal">
+    <div class="about-visual">
+      <div class="about-img-wrap">
+        <img src="me.jpg" alt="Портрет">
+      </div>
+      <div class="about-corner"></div>
+      <div class="about-tag">Витебск</div>
+    </div>
+    <div class="about-text-col">
+      <div class="section-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="eyebrow-text">О фотографе</span>
+      </div>
+      <h2 class="section-title">Взгляд<br>изнутри <em>города</em></h2>
+      <p class="body-text">Фотограф из Витебска. Снимаю людей, моменты и атмосферу. Каждый кадр — это история, рассказанная без слов. Улицы, лица, тишина между событиями — всё это складывается в документ времени.</p>
+      <div class="about-stats">
+        <div class="stat">
+          <div class="stat-num">10–20</div>
+          <div class="stat-label">готовых кадров</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3–5</div>
+          <div class="stat-label">дней обработки</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">локаций</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="portfolio reveal">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Портфолио</span></div>
+        <h2 class="section-title" style="margin-top:8px">Избранные <em>работы</em></h2>
+      </div>
+      <a href="https://t.me/phMaxweqq" target="_blank" rel="noopener noreferrer" class="btn">Все работы →</a>
+    </div>
+    <div class="gallery">
+      <div class="gallery-col" id="col-0">
+        <div class="photo-item"><img src="2.jpg" alt="Фото 2" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="5.jpg" alt="Фото 5" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="8.jpg" alt="Фото 8" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="11.jpg" alt="Фото 11" loading="lazy"><div class="photo-overlay"></div></div>
+      </div>
+      <div class="gallery-col mobile-hidden" id="col-1">
+        <div class="photo-item"><img src="3.jpg" alt="Фото 3" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="6.jpg" alt="Фото 6" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="9.jpg" alt="Фото 9" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="12.jpg" alt="Фото 12" loading="lazy"><div class="photo-overlay"></div></div>
+      </div>
+      <div class="gallery-col mobile-hidden" id="col-2">
+        <div class="photo-item"><img src="4.jpg" alt="Фото 4" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="7.jpg" alt="Фото 7" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="10.jpg" alt="Фото 10" loading="lazy"><div class="photo-overlay"></div></div>
+        <div class="photo-item"><img src="1.jpg" alt="Фото 1" loading="lazy"><div class="photo-overlay"></div></div>
+      </div>
+    </div>
+    <button class="gallery-more-btn" id="gallery-more-btn">Показать все работы ↓</button>
+  </section>
+
+  <section class="categories reveal">
+    <div class="section-eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Направления</span></div>
+    <h2 class="section-title" style="margin-top:8px">Что я <em>снимаю</em></h2>
+    <div class="cats-grid">
+      <div class="cat-item">
+        <div class="cat-num">01</div>
+        <div class="cat-name">Портрет</div>
+        <p class="cat-desc">Человек в своей среде. Без постановки — только живой взгляд и настоящий момент.</p>
+        <div class="cat-arrow">→</div>
+      </div>
+      <div class="cat-item">
+        <div class="cat-num">02</div>
+        <div class="cat-name">Репортаж</div>
+        <p class="cat-desc">События, люди, движение. Фиксирую то, что происходит прямо сейчас.</p>
+        <div class="cat-arrow">→</div>
+      </div>
+      <div class="cat-item">
+        <div class="cat-num">03</div>
+        <div class="cat-name">Документальное</div>
+        <p class="cat-desc">Городская среда, детали, слои времени. Витебск через объектив — честно и без прикрас.</p>
+        <div class="cat-arrow">→</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="process reveal">
+    <div class="section-eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Как это работает</span></div>
+    <h2 class="section-title" style="margin-top:8px">Четыре шага<br>до готовых <em>фото</em></h2>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Пишешь мне</div>
+        <p class="step-desc">Рассказываешь что хочешь снять, выбираем дату и место — любая локация по договорённости.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Обсуждаем идею</div>
+        <p class="step-desc">Разбираем образ, настроение, референсы. Я подскажу что надеть и как подготовиться — без стресса.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Снимаем</div>
+        <p class="step-desc">Съёмка проходит легко и естественно. Я направляю, ты просто живёшь в кадре.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Получаешь фото</div>
+        <p class="step-desc">Через 3–5 дней отправляю 10–20 обработанных кадров. Цвет, свет, настроение — всё выверено вручную.</p>
+      </div>
+    </div>
+    <div class="process-facts">
+      <div class="fact"><div class="fact-num">10–20</div><div class="fact-label">готовых кадров</div></div>
+      <div class="fact"><div class="fact-num">3–5</div><div class="fact-label">дней на обработку</div></div>
+      <div class="fact"><div class="fact-num">∞</div><div class="fact-label">вариантов локации</div></div>
+    </div>
+  </section>
+
+  <section class="cta-section reveal">
+    <div class="cta-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Готовы к съёмке?</span>
+      <div class="eyebrow-line"></div>
+    </div>
+    <h2 class="cta-title">Давайте создадим<br><em>что-то важное</em></h2>
+    <div class="cta-buttons">
+      <a href="https://t.me/maxweqq" target="_blank" rel="noopener noreferrer" class="btn btn-gold">Написать в Telegram</a>
+      <a href="https://t.me/phMaxweqq" target="_blank" rel="noopener noreferrer" class="btn">Смотреть все работы</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">Maxweqq</div>
+  <div class="footer-copy">© 2026 · Made by <a href="https://t.me/tushadev" target="_blank" rel="noopener noreferrer" style="color:var(--dim);border-bottom:1px solid var(--line);transition:color 0.2s,border-color 0.2s" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--dim)';this.style.borderColor='var(--line)'">artvhr_dev</a></div>
+  <a href="https://t.me/maxweqq" target="_blank" rel="noopener noreferrer">@maxweqq</a>
+</footer>
+
+<script>
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20), { passive: true });
+
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+}), { threshold: 0.07 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+const moreBtn = document.getElementById('gallery-more-btn');
+let expanded = false;
+moreBtn.addEventListener('click', () => {
+  expanded = !expanded;
+  document.getElementById('col-1').classList.toggle('expanded', expanded);
+  document.getElementById('col-2').classList.toggle('expanded', expanded);
+  moreBtn.textContent = expanded ? 'Скрыть ↑' : 'Показать все работы ↓';
+});
+</script>
+</body>
+</html>
